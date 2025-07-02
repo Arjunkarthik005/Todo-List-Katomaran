@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Task Manager</title>
+  <style>
+    /* --- Your existing styles remain unchanged --- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    h3 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 2.2rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    .input-section {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 30px;
+      flex-wrap: wrap;
+    }
+
+    #inputbox {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px 20px;
+      border: 2px solid #e1e8ed;
+      border-radius: 12px;
+      font-size: 16px;
+      background: rgba(255, 255, 255, 0.9);
+    }
+
+    #inputbox:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .add-btn {
+      padding: 15px 25px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    .add-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+
+    ol.items-list {
+      list-style: none;
+      counter-reset: item-counter;
+    }
+
+    .items-list li {
+      background: rgba(255, 255, 255, 0.8);
+      margin-bottom: 15px;
+      padding: 20px;
+      border-radius: 15px;
+      border-left: 5px solid #667eea;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+      transition: all 0.3s ease;
+      position: relative;
+      counter-increment: item-counter;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    .items-list li:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    .items-list li::before {
+      content: counter(item-counter);
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .item-text {
+      flex: 1;
+      min-width: 150px;
+      font-size: 16px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .update-btn, .delete-btn {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      min-width: 70px;
+    }
+
+    .update-btn {
+      background: linear-gradient(135deg, #4facfe, #00f2fe);
+      color: white;
+    }
+
+    .update-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(79, 172, 254, 0.4);
+    }
+
+    .delete-btn {
+      background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+      color: white;
+    }
+
+    .delete-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+      }
+
+      .container {
+        background: rgba(30, 30, 30, 0.95);
+        color: #e0e0e0;
+      }
+
+      #inputbox {
+        background: rgba(50, 50, 50, 0.9);
+        border-color: #555;
+        color: #e0e0e0;
+      }
+
+      .items-list li {
+        background: rgba(50, 50, 50, 0.8);
+        color: #e0e0e0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h3>Task Manager</h3>
+    <div class="input-section">
+      <input type="text" id="inputbox" placeholder="Enter new item..." required>
+      <button class="add-btn" onclick="add()">Add Item</button>
+    </div>
+    <ol class="items-list one"></ol>
+  </div>
+
+  <script>
+    const input = document.getElementById("inputbox");
+    const listContainer = document.querySelector(".one");
+
+    // Load tasks from localStorage
+    window.onload = function () {
+      const stored = JSON.parse(localStorage.getItem("taskList")) || [];
+      stored.forEach(task => renderTask(task.text, task.completed));
+    };
+
+    input.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") add();
+    });
+
+    function add() {
+      const value = input.value.trim();
+      if (!value) return alert("Please enter a value");
+      input.value = "";
+      renderTask(value, false);
+      saveToLocalStorage();
+    }
+
+    function renderTask(text, completed = false) {
+      const li = document.createElement("li");
+
+      const itemText = document.createElement("span");
+      itemText.className = "item-text";
+      itemText.textContent = text;
+      if (completed) {
+        itemText.style.textDecoration = "line-through";
+        itemText.style.textDecorationColor = "black";
+        itemText.style.textDecorationThickness = "3px";
+      }
+      li.appendChild(itemText);
+
+      const buttonGroup = document.createElement("div");
+      buttonGroup.className = "button-group";
+
+      const updateBtn = document.createElement("button");
+      updateBtn.className = "update-btn";
+      updateBtn.textContent = "Update";
+      updateBtn.onclick = () => updateTask(itemText);
+      buttonGroup.appendChild(updateBtn);
+
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "Delete";
+      deleteBtn.onclick = () => {
+        li.remove();
+        saveToLocalStorage();
+      };
+      buttonGroup.appendChild(deleteBtn);
+
+      li.appendChild(buttonGroup);
+      listContainer.appendChild(li);
+    }
+
+    function updateTask(textElement) {
+      const newText = prompt("Update task:", textElement.textContent);
+      if (newText && newText.trim() !== "") {
+        textElement.textContent = newText.trim();
+        textElement.style.textDecoration = "none";
+        saveToLocalStorage();
+      } else if (newText !== null) {
+        alert("Value cannot be empty");
+        updateTask(textElement);
+      }
+    }
+
+    function saveToLocalStorage() {
+      const tasks = [];
+      const items = document.querySelectorAll(".items-list li");
+      items.forEach(item => {
+        const text = item.querySelector(".item-text").textContent;
+        const completed = item.querySelector(".item-text").style.textDecoration === "line-through";
+        tasks.push({ text, completed });
+      });
+      localStorage.setItem("taskList", JSON.stringify(tasks));
+    }
+  </script>
+</body>
+</html>
